@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="theme-color" content="#0a0a0f" />
+  <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90' fill='%23c9a84c'>✦</text></svg>" />
+  <title>Minha Biblioteca — Seu Conteúdo</title>
+  <link rel="manifest" href="manifest.json" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="style.css" />
+</head>
+<body class="dashboard-page">
+
+  <!-- Header -->
+  <header class="header">
+    <div class="header-inner">
+      <div class="brand-mini">
+        <span class="brand-icon-sm">✦</span>
+        <span>Minha Biblioteca</span>
+      </div>
+      <div class="header-actions">
+        <button class="btn-pwa-mini" id="installBtnDash" style="display:none">📲 Instalar App</button>
+        <button class="btn-logout" id="logoutBtn">Sair</button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Hero Welcome -->
+  <section class="hero-welcome">
+    <h2 class="hero-title">Bem-vindo ao seu conteúdo 🎉</h2>
+    <p class="hero-sub">Acesse seus materiais exclusivos abaixo. Clique em qualquer capa para abrir.</p>
+  </section>
+
+  <!-- Main Content -->
+  <main class="library">
+
+    <!-- Section: Conteúdo Principal -->
+    <section class="section">
+      <h3 class="section-title">
+        <span class="section-badge unlocked">Desbloqueado</span>
+        Seu Conteúdo Principal
+      </h3>
+      <div class="grid" id="mainGrid">
+
+        <!-- Item 1 -->
+        <div class="card unlocked" data-pdf="public/pdf/ebook-principal.pdf" data-title="E-book Principal">
+          <div class="card-cover" style="background-image: url('public/imagens/capa1.png'); background-size: cover; background-position: center;">
+```
+            <div class="card-cover-icon"></div>
+            <div class="card-cover-label">Receita Completa</div>
+          </div>
+          <div class="card-info">
+            <h4>Bolinho de Ouro</h4>
+            <p>Guia completo passo a passo</p>
+            <span class="card-tag free">Incluso</span>
+          </div>
+        </div>
+
+        <!-- Item 2 -->
+        <div class="card unlocked" data-pdf="public/pdf/ebook-2.pdf" data-title="Livro de Receitas" data-checkout="https://go.perfectpay.com.br/PPU38CQ85M8" data-unlock-key="basico">
+          <div class="card-cover" style="background-image: url('public/imagens/capa2.png'); background-size: cover; background-position: center;">
+            <div class="card-cover-icon"></div>
+            <div class="card-cover-label">Método Digital</div>
+          </div>
+          <div class="card-info">
+            <h4>Venda Sem Sair de Casa</h4>
+            <p>fature + de $5.000/mês</p>
+            <span class="card-tag free">Incluso</span>
+          </div>
+        </div>
+
+        <!-- Item 3 -->
+        <div class="card unlocked" data-pdf="public/pdf/ebook-bonus.pdf" data-title="Checklist" data-checkout="https://go.perfectpay.com.br/PPU38CQ85M8" data-unlock-key="basico">
+          <div class="card-cover" style="background-image: url('public/imagens/capa3.jpg'); background-size: cover; background-position: center;">
+            <div class="card-cover-icon"></div>
+            <div class="card-cover-label">Campeãs de Venda</div>
+          </div>
+          <div class="card-info">
+            <h4>BÔNUS EXCLUSIVO</h4>
+            <p>7 Receitas Campeãs Para Aumentar Seu Lucro</p>
+            <span class="card-tag free">Incluso</span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+    <!-- Section: Ofertas Especiais -->
+    <section class="section">
+      <h3 class="section-title">
+        <span class="section-badge locked">Oferta Especial</span>
+        Conteúdo Premium — Desbloqueie Agora
+      </h3>
+      <div class="grid" id="upsellGrid">
+
+        <!-- Upsell 1 -->
+        <div class="card locked" data-checkout="https://go.perfectpay.com.br/PPU38CQ85TG" data-title="Pack Avançado" data-unlock-key="premium">
+          <div class="card-cover locked-cover" style="background-image: url('public/imagens/capa4.png'); background-size: cover; background-position: center;">
+            <div class="lock-overlay">
+              <div class="lock-icon">🔒</div>
+              <div class="lock-label">Clique para desbloquear</div>
+            </div>
+            <div class="card-cover-icon muted">⚡</div>
+            <div class="card-cover-label muted">Premium</div>
+          </div>
+          <div class="card-info">
+            <h4>Molhos Premium Gourmet</h4>
+            <p>Conteúdo extra de alto nível</p>
+            <span class="card-tag premium">Comprar agora</span>
+          </div>
+        </div>
+
+        <!-- Upsell 2 -->
+        <div class="card locked" data-checkout="https://seusite.com/checkout/upsell-2" data-title="Masterclass">
+          <div class="card-cover locked-cover" style="background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%)">
+            <div class="lock-overlay">
+              <div class="lock-icon">🔒</div>
+              <div class="lock-label">Clique para desbloquear</div>
+            </div>
+            <div class="card-cover-icon muted">🎓</div>
+            <div class="card-cover-label muted">Masterclass</div>
+          </div>
+          <div class="card-info">
+            <h4>Masterclass Exclusiva</h4>
+            <p>Treinamento aprofundado</p>
+            <span class="card-tag premium">Comprar agora</span>
+          </div>
+        </div>
+
+        <!-- Upsell 3 -->
+        <div class="card locked" data-checkout="https://seusite.com/checkout/upsell-3" data-title="Bônus VIP">
+          <div class="card-cover locked-cover" style="background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%)">
+            <div class="lock-overlay">
+              <div class="lock-icon">🔒</div>
+              <div class="lock-label">Clique para desbloquear</div>
+            </div>
+            <div class="card-cover-icon muted">👑</div>
+            <div class="card-cover-label muted">VIP</div>
+          </div>
+          <div class="card-info">
+            <h4>Bônus VIP</h4>
+            <p>Para membros especiais</p>
+            <span class="card-tag premium">Comprar agora</span>
+          </div>
+        </div>
+
+      </div>
+    </section>
+
+  </main>
+
+  <!-- PDF Modal -->
+  <div class="modal-overlay" id="pdfModal">
+    <div class="modal">
+      <div class="modal-header">
+        <h3 id="modalTitle">Título do PDF</h3>
+        <button class="modal-close" id="modalClose">✕</button>
+      </div>
+      <div class="modal-body">
+        <embed id="pdfEmbed" src="" type="application/pdf" width="100%" height="100%" />
+      </div>
+      <div class="modal-footer">
+        <a id="pdfOpenNew" href="#" target="_blank" class="btn-open-new">Abrir em nova aba ↗</a>
+      </div>
+    </div>
+  </div>
+
+  <script src="app.js"></script>
+</body>
+</html>
