@@ -2,26 +2,34 @@
    service-worker.js — PWA Offline Support
 ============================================ */
 
-const CACHE_NAME = "minha-biblioteca-v1";
+const CACHE_NAME = "minha-biblioteca-v2";
 
 // Arquivos que ficam disponíveis offline
 const PRECACHE_ASSETS = [
-  "/public/index.html",
-  "/public/dashboard.html",
-  "/public/style.css",
-  "/public/app.js",
-  "/manifest.json",
+  "./index.html",
+  "./dashboard.html",
+  "./style.css",
+  "./app.js",
+  "./manifest.json",
 ];
 
 // =============================================
 // INSTALL — Pré-cache dos assets
 // =============================================
 self.addEventListener("install", (event) => {
+  console.log("🔧 Service Worker instalando...");
   event.waitUntil(
     caches
       .open(CACHE_NAME)
-      .then((cache) => cache.addAll(PRECACHE_ASSETS))
-      .then(() => self.skipWaiting())
+      .then((cache) => {
+        console.log("📦 Cacheando assets...");
+        return cache.addAll(PRECACHE_ASSETS);
+      })
+      .then(() => {
+        console.log("✅ Cache completo!");
+        return self.skipWaiting();
+      })
+      .catch((err) => console.error("❌ Erro ao cachear:", err))
   );
 });
 
@@ -29,17 +37,25 @@ self.addEventListener("install", (event) => {
 // ACTIVATE — Limpa caches antigos
 // =============================================
 self.addEventListener("activate", (event) => {
+  console.log("🔄 Service Worker ativando...");
   event.waitUntil(
     caches
       .keys()
-      .then((keys) =>
-        Promise.all(
+      .then((keys) => {
+        console.log("🗑️ Limpando caches antigos...");
+        return Promise.all(
           keys
             .filter((key) => key !== CACHE_NAME)
-            .map((key) => caches.delete(key))
-        )
-      )
-      .then(() => self.clients.claim())
+            .map((key) => {
+              console.log("  Deletando:", key);
+              return caches.delete(key);
+            })
+        );
+      })
+      .then(() => {
+        console.log("✅ Caches limpos!");
+        return self.clients.claim();
+      })
   );
 });
 
@@ -49,6 +65,11 @@ self.addEventListener("activate", (event) => {
 self.addEventListener("fetch", (event) => {
   const { request } = event;
   const url = new URL(request.url);
+
+  // Ignora requests não-GET
+  if (request.method !== "GET") {
+    return;
+  }
 
   // PDFs: sempre tenta a rede primeiro (download mais recente)
   if (url.pathname.endsWith(".pdf")) {
@@ -73,7 +94,15 @@ self.addEventListener("fetch", (event) => {
           const clone = response.clone();
           caches.open(CACHE_NAME).then((cache) => cache.put(request, clone));
           return response;
+        }).catch(() => {
+          // Se falhar, tenta retornar um fallback
+          if (request.destination === "document") {
+            return caches.match("./index.html");
+          }
         })
     )
   );
 });
+
+console.log("✅ Service Worker registrado!");
+

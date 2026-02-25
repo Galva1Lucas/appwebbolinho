@@ -48,9 +48,22 @@ if (isDashboard) initDashboard();
 // =============================================
 
 if ("serviceWorker" in navigator) {
-  navigator.serviceWorker
-    .register("service-worker.js")
-    .catch((err) => console.log("SW registration failed:", err));
+  window.addEventListener("load", () => {
+    navigator.serviceWorker
+      .register("./service-worker.js")
+      .then((reg) => {
+        console.log("✅ Service Worker registrado com sucesso!", reg);
+        // Verifica se há atualizações disponíveis
+        setInterval(() => {
+          reg.update();
+        }, 60000); // Atualiza a cada 1 minuto
+      })
+      .catch((err) => {
+        console.error("❌ Erro ao registrar Service Worker:", err);
+      });
+  });
+} else {
+  console.warn("⚠️ Service Worker não suportado neste navegador");
 }
 
 // =============================================
