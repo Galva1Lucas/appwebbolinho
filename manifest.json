@@ -1,35 +1,63 @@
 {
   "name": "Minha Biblioteca Digital",
   "short_name": "Biblioteca",
-  "description": "Acesse seus conteúdos exclusivos",
-  "start_url": "./",
+  "description": "Acesse seus conteúdos exclusivos com Minha Biblioteca",
+  "start_url": "./index.html",
   "scope": "./",
   "display": "standalone",
   "background_color": "#0a0a0f",
   "theme_color": "#0a0a0f",
-  "orientation": "portrait-primary",
+  "orientation": "portrait",
+  "prefer_related_applications": false,
   "icons": [
     {
-      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect fill='%230a0a0f' width='192' height='192'/><text x='96' y='140' font-size='160' fill='%23c9a84c' text-anchor='middle'>✦</text></svg>",
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect fill='%230a0a0f' width='192' height='192' rx='48'/><text x='96' y='140' font-size='160' fill='%23c9a84c' text-anchor='middle' font-weight='bold'>✦</text></svg>",
       "sizes": "192x192",
       "type": "image/svg+xml",
-      "purpose": "any maskable"
+      "purpose": "any"
     },
     {
-      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect fill='%230a0a0f' width='512' height='512'/><text x='256' y='380' font-size='420' fill='%23c9a84c' text-anchor='middle'>✦</text></svg>",
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect fill='%230a0a0f' width='192' height='192' rx='48'/><text x='96' y='140' font-size='160' fill='%23c9a84c' text-anchor='middle' font-weight='bold'>✦</text></svg>",
+      "sizes": "192x192",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
+    },
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect fill='%230a0a0f' width='512' height='512' rx='128'/><text x='256' y='380' font-size='420' fill='%23c9a84c' text-anchor='middle' font-weight='bold'>✦</text></svg>",
       "sizes": "512x512",
       "type": "image/svg+xml",
-      "purpose": "any maskable"
+      "purpose": "any"
+    },
+    {
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 512 512'><rect fill='%230a0a0f' width='512' height='512' rx='128'/><text x='256' y='380' font-size='420' fill='%23c9a84c' text-anchor='middle' font-weight='bold'>✦</text></svg>",
+      "sizes": "512x512",
+      "type": "image/svg+xml",
+      "purpose": "maskable"
     }
   ],
+  "categories": ["productivity", "education"],
   "screenshots": [
     {
-      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 540 720'><rect fill='%230a0a0f' width='540' height='720'/></svg>",
+      "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 540 720'><rect fill='%230a0a0f' width='540' height='720'/><rect fill='%23c9a84c' x='20' y='40' width='500' height='320' rx='16' opacity='0.1'/><text x='270' y='220' font-size='48' fill='%23c9a84c' text-anchor='middle' font-weight='bold'>Minha Biblioteca</text></svg>",
       "sizes": "540x720",
       "type": "image/svg+xml",
       "form_factor": "narrow"
     }
   ],
-  "categories": ["education", "books"],
+  "shortcuts": [
+    {
+      "name": "Acessar Conteúdo",
+      "short_name": "Conteúdo",
+      "description": "Acesse seus ebooks e materiais",
+      "url": "./dashboard.html",
+      "icons": [
+        {
+          "src": "data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 192 192'><rect fill='%230a0a0f' width='192' height='192' rx='48'/><text x='96' y='140' font-size='160' fill='%23c9a84c' text-anchor='middle' font-weight='bold'>✦</text></svg>",
+          "sizes": "192x192",
+          "type": "image/svg+xml"
+        }
+      ]
+    }
+  ],
   "lang": "pt-BR"
 }

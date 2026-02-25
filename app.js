@@ -37,17 +37,25 @@ let deferredPrompt = null;
 // CAPTURA DO EVENTO beforeinstallprompt (deve ser ANTES de qualquer outra coisa)
 // =============================================
 
-console.log("📱 PWA: Script carregado, aguardando beforeinstallprompt...");
+console.log("📱 PWA: Script carregado!");
+console.log("  Navegador:", navigator.userAgent.substring(0, 80) + "...");
+console.log("  HTTPS:", window.location.protocol === "https:");
+console.log("  Service Worker disponível:", "serviceWorker" in navigator);
+
+let beforeInstallPromptCaptured = false;
 
 window.addEventListener("beforeinstallprompt", (e) => {
-  console.log("✅ PWA: beforeinstallprompt capturado!");
+  console.log("✅✅✅ PWA: beforeinstallprompt CAPTURADO COM SUCESSO! ✅✅✅");
+  beforeInstallPromptCaptured = true;
   e.preventDefault();
   deferredPrompt = e;
   
-  console.log("📱 PWA: deferredPrompt agora está disponível");
+  console.log("📱 PWA: deferredPrompt agora disponível");
+  console.log("  Tipo:", typeof e);
+  console.log("  Pode instalar:", !!e.prompt);
   
   // Tenta mostrar o banner/botão se a página estiver pronta
-  document.addEventListener("DOMContentLoaded", function showInstallButtons() {
+  const showButtons = () => {
     const banner = document.getElementById("pwaBanner");
     if (banner) {
       console.log("📱 PWA: Mostrando banner de login");
@@ -59,35 +67,36 @@ window.addEventListener("beforeinstallprompt", (e) => {
       console.log("📱 PWA: Mostrando botão do dashboard");
       dashBtn.style.display = "inline-flex";
     }
-    
-    document.removeEventListener("DOMContentLoaded", showInstallButtons);
-  });
+  };
 
-  // Se a página já foi carregada, mostra direto
   if (document.readyState === "complete" || document.readyState === "interactive") {
-    const banner = document.getElementById("pwaBanner");
-    if (banner) {
-      console.log("📱 PWA: Mostrando banner (DOM já pronto)");
-      banner.classList.remove("hidden");
-    }
-
-    const dashBtn = document.getElementById("installBtnDash");
-    if (dashBtn) {
-      console.log("📱 PWA: Mostrando botão (DOM já pronto)");
-      dashBtn.style.display = "inline-flex";
-    }
+    showButtons();
+  } else {
+    document.addEventListener("DOMContentLoaded", showButtons);
   }
 });
 
+// Evento quando o app é instalado
 window.addEventListener("appinstalled", () => {
-  console.log("✅ App instalado com sucesso!");
+  console.log("✅✅✅ App instalado com sucesso! ✅✅✅");
   localStorage.setItem("pwa_installed", "true");
   deferredPrompt = null;
 });
 
-// também tenta no window load
+// Log no window load
 window.addEventListener("load", () => {
-  console.log("📱 PWA: Window load - deferredPrompt:", deferredPrompt ? "sim" : "não");
+  console.log("📱 PWA: Window load");
+  console.log("  - beforeinstallprompt capturado?", beforeInstallPromptCaptured);
+  console.log("  - deferredPrompt disponível?", !!deferredPrompt);
+  
+  if (!beforeInstallPromptCaptured) {
+    console.warn("⚠️ PWA: beforeinstallprompt NÃO foi capturado!");
+    console.warn("  Possíveis motivos:");
+    console.warn("  - Navegador não suporta PWA");
+    console.warn("  - Falta critério de instalabilidade");
+    console.warn("  - Manifest.json com problema");
+    console.warn("  - Service Worker não registrou corretamente");
+  }
 });
 
 // =============================================
