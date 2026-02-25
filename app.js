@@ -40,9 +40,11 @@ let deferredPrompt = null;
 console.log("📱 PWA: Script carregado, aguardando beforeinstallprompt...");
 
 window.addEventListener("beforeinstallprompt", (e) => {
-  console.log("📱 PWA: beforeinstallprompt capturado!");
+  console.log("✅ PWA: beforeinstallprompt capturado!");
   e.preventDefault();
   deferredPrompt = e;
+  
+  console.log("📱 PWA: deferredPrompt agora está disponível");
   
   // Tenta mostrar o banner/botão se a página estiver pronta
   document.addEventListener("DOMContentLoaded", function showInstallButtons() {
@@ -62,7 +64,7 @@ window.addEventListener("beforeinstallprompt", (e) => {
   });
 
   // Se a página já foi carregada, mostra direto
-  if (document.readyState === "complete") {
+  if (document.readyState === "complete" || document.readyState === "interactive") {
     const banner = document.getElementById("pwaBanner");
     if (banner) {
       console.log("📱 PWA: Mostrando banner (DOM já pronto)");
@@ -81,6 +83,11 @@ window.addEventListener("appinstalled", () => {
   console.log("✅ App instalado com sucesso!");
   localStorage.setItem("pwa_installed", "true");
   deferredPrompt = null;
+});
+
+// também tenta no window load
+window.addEventListener("load", () => {
+  console.log("📱 PWA: Window load - deferredPrompt:", deferredPrompt ? "sim" : "não");
 });
 
 // =============================================
@@ -535,11 +542,14 @@ function setupPWABanner(bannerId, installBtnId, closeBtnId) {
   // Verifica se o app já foi instalado
   const appInstalled = localStorage.getItem("pwa_installed");
   
-  console.log("📱 PWA: setupPWABanner called");
+  console.log("📱 PWA: setupPWABanner chamado");
   console.log("  - bannerId:", bannerId);
   console.log("  - installBtnId:", installBtnId);
+  console.log("  - closeBtnId:", closeBtnId);
   console.log("  - appInstalled:", appInstalled);
-  console.log("  - deferredPrompt:", deferredPrompt ? "disponível" : "não disponível");
+  console.log("  - deferredPrompt disponível:", !!deferredPrompt);
+  console.log("  - banner encontrado:", !!banner);
+  console.log("  - installBtn encontrado:", !!installBtn);
   
   // No login, o banner fica sempre visível (a menos que já tenha sido instalado)
   if (banner && appInstalled) {
@@ -549,33 +559,53 @@ function setupPWABanner(bannerId, installBtnId, closeBtnId) {
   }
 
   if (installBtn) {
-    installBtn.addEventListener("click", async () => {
-      console.log("🔘 PWA: Botão clicado!");
+    installBtn.addEventListener("click", async (e) => {
+      e.preventDefault();
+      console.log("🔘 PWA: Botão clicado! deferredPrompt:", !!deferredPrompt);
       
       if (!deferredPrompt) {
         console.warn("⚠️ PWA: deferredPrompt não disponível");
+        
+        // Verifica se está em HTTPS
+        if (window.location.protocol !== "https:" && !window.location.hostname.includes("localhost")) {
+          alert("❌ PWA requer HTTPS para funcionar. Este site está em HTTP.\n\nPara instalar:\n1. Garanta que está em HTTPS\n2. Recarregue a página\n3. Clique novamente em 'Instalar'");
+          return;
+        }
+        
         alert(
-          "Para instalar: no Chrome, toque no menu (⋯) e selecione 'Instalar app'. No Safari, toque em Compartilhar e depois 'Adicionar à tela de início'."
+          "📱 Desculpe, o app ainda não pode ser instalado agora.\n\n" +
+          "Tente um dos seguintes:\n\n" +
+          "🔵 Chrome Android: Toque no menu (⋯) → Instalar app\n" +
+          "🔵 Chrome PC: Clique no ícone de instalação na barra de endereço\n" +
+          "🍎 Safari iOS: Toque Compartilhar → Adicionar à tela de início\n" +
+          "🔵 Edge: Toque o ícone de instalação na barra de endereço\n\n" +
+          "Se nenhuma opção aparecer, recarregue a página e tente novamente."
         );
         return;
       }
       
-      console.log("📱 PWA: Mostrando prompt de instalação");
-      deferredPrompt.prompt();
-      const { outcome } = await deferredPrompt.userChoice;
-      
-      console.log("📱 PWA: Resultado do prompt:", outcome);
-      
-      if (outcome === "accepted") {
-        console.log("✅ PWA: Instalação aceita!");
-        // Marca que o app foi instalado
-        localStorage.setItem("pwa_installed", "true");
-        if (banner) banner.classList.add("hidden");
-        const dashBtn = document.getElementById("installBtnDash");
-        if (dashBtn) dashBtn.style.display = "none";
-      } else {
-        console.log("❌ PWA: Instalação recusada");
+      console.log("📱 PWA: Mostrando prompt de instalação...");
+      try {
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        
+        console.log("📱 PWA: Resultado do prompt:", outcome);
+        
+        if (outcome === "accepted") {
+          console.log("✅ PWA: Instalação aceita!");
+          localStorage.setItem("pwa_installed", "true");
+          if (banner) banner.classList.add("hidden");
+          const dashBtn = document.getElementById("installBtnDash");
+          if (dashBtn) dashBtn.style.display = "none";
+          alert("✅ App instalado com sucesso! Acesse pela tela inicial.");
+        } else {
+          console.log("❌ PWA: Instalação recusada pelo usuário");
+        }
+      } catch (err) {
+        console.error("❌ Erro ao mostrar prompt:", err);
+        alert("Erro ao instalar. Tente novamente.");
       }
+      
       deferredPrompt = null;
     });
   }
@@ -584,7 +614,6 @@ function setupPWABanner(bannerId, installBtnId, closeBtnId) {
     closeBtn.addEventListener("click", (e) => {
       e.preventDefault();
       console.log("❌ PWA: Banner fechado");
-      // Apenas esconde visualmente nesta sessão, volta quando entrar novamente
       if (banner) banner.style.display = "none";
     });
   }
