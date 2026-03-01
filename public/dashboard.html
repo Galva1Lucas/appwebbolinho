@@ -1,18 +1,23 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
+
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover, user-scalable=no" />
   <meta name="apple-mobile-web-app-capable" content="yes" />
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
   <meta name="theme-color" content="#0a0a0f" />
-  <link rel="icon" type="image/x-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90' fill='%23c9a84c'>✦</text></svg>" />
+  <link rel="icon" type="image/x-icon"
+    href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90' fill='%23c9a84c'>✦</text></svg>" />
   <title>Minha Biblioteca — Seu Conteúdo</title>
   <link rel="manifest" href="manifest.json" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800;900&family=Inter:wght@300;400;500;600&display=swap" rel="stylesheet" />
+  <link
+    href="https://fonts.googleapis.com/css2?family=Montserrat:wght@600;700;800;900&family=Inter:wght@300;400;500;600&display=swap"
+    rel="stylesheet" />
   <link rel="stylesheet" href="style.css" />
 </head>
+
 <body class="dashboard-page">
 
   <!-- Header -->
@@ -47,9 +52,10 @@
       <div class="grid" id="mainGrid">
 
         <!-- Item 1 -->
-        <div class="card unlocked" data-pdf="public/pdf/ebook-principal.pdf" data-title="E-book Principal">
-          <div class="card-cover" style="background-image: url('public/imagens/capa1.png'); background-size: cover; background-position: center;">
-```
+        <div class="card unlocked" data-pdf="pdf/ebook-principal.pdf" data-title="E-book Principal">
+          <div class="card-cover"
+            style="background-image: url('imagens/capa1.png'); background-size: cover; background-position: center;">
+            ```
             <div class="card-cover-icon"></div>
             <div class="card-cover-label">Receita Completa</div>
           </div>
@@ -61,8 +67,10 @@
         </div>
 
         <!-- Item 2 -->
-        <div class="card unlocked" data-pdf="public/pdf/ebook-2.pdf" data-title="Livro de Receitas" data-checkout="https://go.perfectpay.com.br/PPU38CQ85M8" data-unlock-key="basico">
-          <div class="card-cover" style="background-image: url('public/imagens/capa2.png'); background-size: cover; background-position: center;">
+        <div class="card unlocked" data-pdf="pdf/ebook-2.pdf" data-title="Livro de Receitas"
+          data-checkout="https://go.perfectpay.com.br/PPU38CQ85M8" data-unlock-key="basico">
+          <div class="card-cover"
+            style="background-image: url('imagens/capa2.png'); background-size: cover; background-position: center;">
             <div class="card-cover-icon"></div>
             <div class="card-cover-label">Método Digital</div>
           </div>
@@ -74,8 +82,10 @@
         </div>
 
         <!-- Item 3 -->
-        <div class="card unlocked" data-pdf="public/pdf/ebook-bonus.pdf" data-title="Checklist" data-checkout="https://go.perfectpay.com.br/PPU38CQ85M8" data-unlock-key="basico">
-          <div class="card-cover" style="background-image: url('public/imagens/capa3.jpg'); background-size: cover; background-position: center;">
+        <div class="card unlocked" data-pdf="pdf/ebook-bonus.pdf" data-title="Checklist"
+          data-checkout="https://go.perfectpay.com.br/PPU38CQ85M8" data-unlock-key="basico">
+          <div class="card-cover"
+            style="background-image: url('imagens/capa3.jpg'); background-size: cover; background-position: center;">
             <div class="card-cover-icon"></div>
             <div class="card-cover-label">Campeãs de Venda</div>
           </div>
@@ -98,8 +108,10 @@
       <div class="grid" id="upsellGrid">
 
         <!-- Upsell 1 -->
-        <div class="card locked" data-checkout="https://go.perfectpay.com.br/PPU38CQ85TG" data-title="Pack Avançado" data-unlock-key="premium">
-          <div class="card-cover locked-cover" style="background-image: url('public/imagens/capa4.png'); background-size: cover; background-position: center;">
+        <div class="card locked" data-pdf="pdf/ebook-molhos.pdf"
+          data-checkout="https://go.perfectpay.com.br/PPU38CQ85TG" data-title="Pack Avançado" data-unlock-key="premium">
+          <div class="card-cover locked-cover"
+            style="background-image: url('imagens/capa4.png'); background-size: cover; background-position: center;">
             <div class="lock-overlay">
               <div class="lock-icon">🔒</div>
               <div class="lock-label">Clique para desbloquear</div>
@@ -115,36 +127,40 @@
         </div>
 
         <!-- Upsell 2 -->
-        <div class="card locked" data-checkout="https://seusite.com/checkout/upsell-2" data-title="Masterclass">
-          <div class="card-cover locked-cover" style="background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%)">
+        <div class="card locked" data-pdf="pdf/5ebook-manualescala.pdf"
+          data-checkout="https://go.perfectpay.com.br/PPU38CQ8AS0" data-title="Manual da Escala"
+          data-unlock-key="escala">
+          <div class="card-cover locked-cover"
+            style="background-image: url('imagens/capa5.png'); background-size: cover; background-position: center;">
             <div class="lock-overlay">
               <div class="lock-icon">🔒</div>
               <div class="lock-label">Clique para desbloquear</div>
             </div>
             <div class="card-cover-icon muted">🎓</div>
-            <div class="card-cover-label muted">Masterclass</div>
+            <div class="card-cover-label muted">Manual</div>
           </div>
           <div class="card-info">
-            <h4>Masterclass Exclusiva</h4>
-            <p>Treinamento aprofundado</p>
+            <h4>Manual da Escala</h4>
+            <p>Aprenda a escalar seu negócio</p>
             <span class="card-tag premium">Comprar agora</span>
           </div>
         </div>
 
         <!-- Upsell 3 -->
-        <div class="card locked" data-checkout="https://seusite.com/checkout/upsell-3" data-title="Bônus VIP">
+        <div class="card locked" style="pointer-events: none; opacity: 0.7;" data-title="Em Breve">
           <div class="card-cover locked-cover" style="background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%)">
             <div class="lock-overlay">
-              <div class="lock-icon">🔒</div>
-              <div class="lock-label">Clique para desbloquear</div>
+              <div class="lock-icon">⏳</div>
+              <div class="lock-label">Em Breve</div>
             </div>
             <div class="card-cover-icon muted">👑</div>
             <div class="card-cover-label muted">VIP</div>
           </div>
           <div class="card-info">
             <h4>Bônus VIP</h4>
-            <p>Para membros especiais</p>
-            <span class="card-tag premium">Comprar agora</span>
+            <p>Novidades chegando aqui</p>
+            <span class="card-tag"
+              style="background: rgba(255,255,255,0.1); color: #ccc; border: 1px solid rgba(255,255,255,0.2);">Aguarde</span>
           </div>
         </div>
 
@@ -171,4 +187,5 @@
 
   <script src="app.js"></script>
 </body>
+
 </html>

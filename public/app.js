@@ -8,11 +8,12 @@
 // =============================================
 
 const CONFIG = {
-  // Senhas com diferentes níveis de acesso
+  // Senhas com diferentes níveis de acesso (MANTENHA EM MINÚSCULAS AQUI)
   senhas: {
-    "Querofaturar": { nivel: "completo", descricao: "Acesso Total" },
-    "Receita10": { nivel: "basico", descricao: "Acesso Básico" },
-    "Premium1": { nivel: "premium", descricao: "Acesso Premium" }
+    "querofaturar": { nivel: "completo", descricao: "Acesso Total" },
+    "receita10": { nivel: "basico", descricao: "Acesso Básico" },
+    "premium1": { nivel: "premium", descricao: "Acesso Premium" },
+    "5000$": { nivel: "escala", descricao: "Acesso Manual da Escala" }
   },
 
   // IDs de conteúdo desbloqueado extra (via URL parameter ?unlock=ID)
@@ -49,11 +50,11 @@ window.addEventListener("beforeinstallprompt", (e) => {
   beforeInstallPromptCaptured = true;
   e.preventDefault();
   deferredPrompt = e;
-  
+
   console.log("📱 PWA: deferredPrompt agora disponível");
   console.log("  Tipo:", typeof e);
   console.log("  Pode instalar:", !!e.prompt);
-  
+
   // Tenta mostrar o banner/botão se a página estiver pronta
   const showButtons = () => {
     const banner = document.getElementById("pwaBanner");
@@ -88,7 +89,7 @@ window.addEventListener("load", () => {
   console.log("📱 PWA: Window load");
   console.log("  - beforeinstallprompt capturado?", beforeInstallPromptCaptured);
   console.log("  - deferredPrompt disponível?", !!deferredPrompt);
-  
+
   if (!beforeInstallPromptCaptured) {
     console.warn("⚠️ PWA: beforeinstallprompt NÃO foi capturado!");
     console.warn("  Possíveis motivos:");
@@ -152,7 +153,7 @@ function initLogin() {
   // Password toggle
   const passwordToggle = document.getElementById("passwordToggle");
   const passwordInput = document.getElementById("senha");
-  
+
   if (passwordToggle) {
     passwordToggle.addEventListener("click", (e) => {
       e.preventDefault();
@@ -187,10 +188,12 @@ function initLogin() {
       return;
     }
 
-    // Verifica senha
-    if (CONFIG.senhas[senha]) {
+    // Verifica senha (ignorando letras maiúsculas/minúsculas)
+    const senhaKey = senha.toLowerCase();
+
+    if (CONFIG.senhas[senhaKey]) {
       console.log("✅ Senha correta! Salvando sessão...");
-      setSession(CONFIG.senhas[senha].nivel);
+      setSession(CONFIG.senhas[senhaKey].nivel);
       console.log("✅ Sessão salva. Redirecionando...");
       setTimeout(() => {
         window.location.href = "dashboard.html";
@@ -212,7 +215,7 @@ function initLogin() {
 function initDashboard() {
   console.log("🔍 Iniciando Dashboard...");
   console.log("Logado?", isLoggedIn());
-  
+
   // Protege a rota — se não logado, volta pro login
   if (!isLoggedIn()) {
     console.log("❌ Não está logado! Redirecionando para login...");
@@ -221,18 +224,24 @@ function initDashboard() {
   }
 
   console.log("✅ Dashboard carregado com sucesso!");
-  
+
   // Obtém nível de acesso e aplica restrições
   const acessLevel = getAccessLevel();
   console.log("📊 Nível de acesso:", acessLevel);
-  
+
   // Se tiver acesso básico, desabilita cards 2 e 3
   if (acessLevel === "basico") {
     restrictContent();
   }
-  // Se tiver acesso premium, desbloqueia automaticamente upsell 1
+  // Se tiver acesso premium, desbloqueia automaticamente upsell 1 e mantem os basicos desbloqueados
   else if (acessLevel === "premium") {
     unlockPremiumContent();
+  }
+  // Se for o plano que incluiu Manual da Escala
+  else if (acessLevel === "escala") {
+    // Escala tem os acessos básicos (então cortamos o Upsell 1 se não embutido) + ganha o Manual
+    // Como queremos garantir, desbloqueamos com base num data-key ou ID específico
+    unlockEscalaContent();
   }
 
   // Verifica desbloqueio via URL (após pagamento de upsell)
@@ -335,40 +344,40 @@ function closeModal() {
 function restrictContent() {
   // Com acesso básico, apenas o primeiro card (Bolinho de Ouro) fica disponível
   const cards = document.querySelectorAll(".card.unlocked");
-  
+
   if (cards.length > 0) {
     // Primeiro card fica desbloqueado
     cards[0].dataset.restricted = "false";
-    
+
     // Cards 2 e 3 ficam bloqueados
     for (let i = 1; i < cards.length; i++) {
       const card = cards[i];
       card.classList.remove("unlocked");
       card.classList.add("locked");
       card.dataset.restricted = "true";
-      
+
       // Adiciona overlay de bloqueio
       const cover = card.querySelector(".card-cover");
       if (cover && !cover.classList.contains("locked-cover")) {
         cover.classList.add("locked-cover");
-        
+
         const overlay = document.createElement("div");
         overlay.className = "lock-overlay";
         overlay.innerHTML = '<div class="lock-icon">🔒</div><div class="lock-label">Clique para desbloquear</div>';
         cover.appendChild(overlay);
       }
-      
+
       // Muda o badge do card
       const tag = card.querySelector(".card-tag");
       if (tag) {
         tag.textContent = "Desbloquear agora";
         tag.className = "card-tag premium";
       }
-      
+
       // Remove listener de clique anterior e adiciona listener de checkout
       card.replaceWith(card.cloneNode(true));
     }
-    
+
     // Re-adiciona listeners após clonagem
     const restrictedCards = document.querySelectorAll("[data-restricted='true']");
     restrictedCards.forEach((card) => {
@@ -389,13 +398,27 @@ function restrictContent() {
 function unlockPremiumContent() {
   // Com acesso premium, desbloqueia automaticamente o upsell 1
   const upsells = document.querySelectorAll(".card.locked");
-  
+
   if (upsells.length > 0) {
     // Desbloqueia apenas o primeiro upsell (Molhos Premium Gourmet)
     const firstUpsell = upsells[0];
     unlockCard(firstUpsell);
     saveUnlockedItem(firstUpsell.id || "upsell-1");
     console.log("🔓 Upsell 1 desbloqueado para Premium!");
+  }
+}
+
+// =============================================
+// DESBLOQUEAR MANUAL DA ESCALA
+// =============================================
+
+function unlockEscalaContent() {
+  // Com acesso escala, tenta desbloquear o card que tem o data-unlock-key="escala"
+  const escalaCard = document.querySelector('[data-unlock-key="escala"]');
+  if (escalaCard) {
+    unlockCard(escalaCard);
+    saveUnlockedItem(escalaCard.id || "card-upsell-2");
+    console.log("🔓 Upsell 2 desbloqueado para Escala!");
   }
 }
 
@@ -550,7 +573,7 @@ function setupPWABanner(bannerId, installBtnId, closeBtnId) {
 
   // Verifica se o app já foi instalado
   const appInstalled = localStorage.getItem("pwa_installed");
-  
+
   console.log("📱 PWA: setupPWABanner chamado");
   console.log("  - bannerId:", bannerId);
   console.log("  - installBtnId:", installBtnId);
@@ -559,7 +582,7 @@ function setupPWABanner(bannerId, installBtnId, closeBtnId) {
   console.log("  - deferredPrompt disponível:", !!deferredPrompt);
   console.log("  - banner encontrado:", !!banner);
   console.log("  - installBtn encontrado:", !!installBtn);
-  
+
   // No login, o banner fica sempre visível (a menos que já tenha sido instalado)
   if (banner && appInstalled) {
     console.log("📱 PWA: App já instalado, escondendo banner");
@@ -571,16 +594,16 @@ function setupPWABanner(bannerId, installBtnId, closeBtnId) {
     installBtn.addEventListener("click", async (e) => {
       e.preventDefault();
       console.log("🔘 PWA: Botão clicado! deferredPrompt:", !!deferredPrompt);
-      
+
       if (!deferredPrompt) {
         console.warn("⚠️ PWA: deferredPrompt não disponível");
-        
+
         // Verifica se está em HTTPS
         if (window.location.protocol !== "https:" && !window.location.hostname.includes("localhost")) {
           alert("❌ PWA requer HTTPS para funcionar. Este site está em HTTP.\n\nPara instalar:\n1. Garanta que está em HTTPS\n2. Recarregue a página\n3. Clique novamente em 'Instalar'");
           return;
         }
-        
+
         alert(
           "📱 Desculpe, o app ainda não pode ser instalado agora.\n\n" +
           "Tente um dos seguintes:\n\n" +
@@ -592,14 +615,14 @@ function setupPWABanner(bannerId, installBtnId, closeBtnId) {
         );
         return;
       }
-      
+
       console.log("📱 PWA: Mostrando prompt de instalação...");
       try {
         deferredPrompt.prompt();
         const { outcome } = await deferredPrompt.userChoice;
-        
+
         console.log("📱 PWA: Resultado do prompt:", outcome);
-        
+
         if (outcome === "accepted") {
           console.log("✅ PWA: Instalação aceita!");
           localStorage.setItem("pwa_installed", "true");
@@ -614,7 +637,7 @@ function setupPWABanner(bannerId, installBtnId, closeBtnId) {
         console.error("❌ Erro ao mostrar prompt:", err);
         alert("Erro ao instalar. Tente novamente.");
       }
-      
+
       deferredPrompt = null;
     });
   }

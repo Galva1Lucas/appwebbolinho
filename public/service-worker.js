@@ -2,7 +2,7 @@
    service-worker.js — PWA Offline Support
 ============================================ */
 
-const CACHE_VERSION = "v3";
+const CACHE_VERSION = "v7";
 const CACHE_NAME = `minha-biblioteca-${CACHE_VERSION}`;
 
 // Arquivos que ficam disponíveis offline
@@ -19,7 +19,7 @@ const PRECACHE_ASSETS = [
 // =============================================
 self.addEventListener("install", (event) => {
   console.log(`🔧 Service Worker instalando... (${CACHE_NAME})`);
-  
+
   event.waitUntil(
     caches
       .open(CACHE_NAME)
@@ -43,7 +43,7 @@ self.addEventListener("install", (event) => {
 // =============================================
 self.addEventListener("activate", (event) => {
   console.log("🔄 Service Worker ativando...");
-  
+
   event.waitUntil(
     caches
       .keys()
@@ -127,12 +127,12 @@ self.addEventListener("fetch", (event) => {
       })
       .catch(() => {
         console.log(`🚫 Offline (sem cache): ${request.url}`);
-        
+
         // Retorna página offline para document requests
         if (request.destination === "document") {
           return caches.match("./index.html");
         }
-        
+
         // Retorna resposta vazia para outros tipos
         return new Response("Offline - recurso não disponível", {
           status: 503,
