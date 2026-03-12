@@ -352,6 +352,13 @@ function restrictContent() {
     // Cards 2 e 3 ficam bloqueados
     for (let i = 1; i < cards.length; i++) {
       const card = cards[i];
+      
+      // Sempre liberar o novo card de vídeos
+      if (card.dataset.title === "Vídeos Passo a Passo" || card.dataset.alwaysUnlocked === "true") {
+        card.dataset.restricted = "false";
+        continue;
+      }
+
       card.classList.remove("unlocked");
       card.classList.add("locked");
       card.dataset.restricted = "true";
