@@ -2,7 +2,7 @@
    service-worker.js — PWA Offline Support
 ============================================ */
 
-const CACHE_VERSION = "v7";
+const CACHE_VERSION = "v8";
 const CACHE_NAME = `minha-biblioteca-${CACHE_VERSION}`;
 
 // Arquivos que ficam disponíveis offline
